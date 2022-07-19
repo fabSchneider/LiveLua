@@ -9,7 +9,7 @@ namespace Fab.Lua.Core
 	/// <summary>
 	/// Information on the lua environment and initialization 
 	/// </summary>
-	public static class LuaEnvironment
+	public class LuaEnvironment
 	{
 		public static string DocumentsDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Application.productName);
 		public static string ScriptsDirectory => Path.Combine(DocumentsDirectory, "Scripts");
@@ -19,26 +19,30 @@ namespace Fab.Lua.Core
 		public static readonly string ScriptLoadDirKey = "SCRIPT_DIR";
 		public static readonly string ScriptDataDirKey = "DATA_DIR";
 
-		private static LuaObjectRegistry registry;
+		private static LuaEnvironment _instance;
+
+		private static LuaEnvironment Instance
+        {
+			get
+            {
+				if(_instance == null)
+					_instance = new LuaEnvironment();
+
+				return _instance;
+            }
+        }
+
+		private LuaObjectRegistry registry;
 
 		/// <summary>
 		/// The environments lua object registry 
 		/// </summary>
-		public static LuaObjectRegistry Registry
-		{
-			get
-			{
-				if (registry == null)
-					registry = new LuaObjectRegistry();
-				return registry;
-			}
-		}
+		public static LuaObjectRegistry Registry => Instance.registry;
 
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-		public static void Init()
+		private LuaEnvironment()
 		{
+			registry = new LuaObjectRegistry();
 			Script.GlobalOptions.Platform = new StandardPlatformAccessor();
-			Debug.Log("Lua Environment initialized");
 		}
 
 		/// <summary>
