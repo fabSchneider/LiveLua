@@ -25,7 +25,7 @@ namespace Fab.Lua.Console
 		{
 			history = new History(maxHistoryEntries, maxPrintOutputLength);
 			console = new Console(name, new ConsoleScriptFactory(), history);
-			help = new ConsoleHelp(new ConsoleHelpFormatter());
+			help = new ConsoleHelp(new ConsoleHelpFormatter(), new ConsoleListFormatter());
 		}
 
 		private void Start()

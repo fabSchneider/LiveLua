@@ -11,12 +11,14 @@ namespace Fab.Lua.Console
     public class ConsoleHelp : IConsoleCommand
     {
 		private LuaHelpInfoCache helpInfoCache;
-		private ILuaHelpFormatter formatter;
+		private ILuaHelpFormatter helpFormatter;
+		private ILuaHelpFormatter listFormatter;
 
-		public ConsoleHelp(ILuaHelpFormatter formatter)
+		public ConsoleHelp(ILuaHelpFormatter helpFormatter, ILuaHelpFormatter listFormatter)
 		{
 			helpInfoCache = new LuaHelpInfoCache();
-			this.formatter = formatter;
+			this.helpFormatter = helpFormatter;
+			this.listFormatter = listFormatter;
 		}
 
 		void IConsoleCommand.Register(Console console)
@@ -43,7 +45,7 @@ namespace Fab.Lua.Console
 						descriptor = proxyDescriptor.InnerDescriptor;
 
 					LuaHelpInfo helpInfo = helpInfoCache.GetHelpInfoForUserData((StandardUserDataDescriptor)descriptor);
-					string formatted = formatter.Format(helpInfo);
+					string formatted = helpFormatter.Format(helpInfo);
 					console.Print(formatted);
 					break;
 				case DataType.ClrFunction:
@@ -60,7 +62,7 @@ namespace Fab.Lua.Console
 			foreach (StandardUserDataDescriptor descriptor in LuaEnvironment.Registry.GetRegisteredTypes(true))
 			{
 				LuaHelpInfo helpInfo = helpInfoCache.GetHelpInfoForUserData(descriptor);
-				console.Print($"{helpInfo.name.PadRight(8, ' ')} <i>{helpInfo.description}</i>" + Environment.NewLine);
+				console.Print(listFormatter.Format(helpInfo));
 			}
 		}
 	}
