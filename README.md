@@ -1,6 +1,6 @@
 # Live Lua
 
-A lua scripting console for Unity build on to of [Moonsharp](https://www.moonsharp.org/).
+A lua scripting console for Unity build on top of [Moonsharp](https://www.moonsharp.org/).
 
 For this package to work add the moonsharp package in the Unity package manager from this git URL: 
 ```
